@@ -50,16 +50,28 @@ pm25_add <- pm25 %>%
   arrange(date) %>% 
   mutate(
     is_above = ifelse(!is.na(above) & above == "above", 1, 0),
+    count_above_in_prev_14d = slide_index_sum(
+      x = is_above,
+      i = date,
+      before = days(14),
+      after = days(-1)
+    ),
     count_above_in_prev_30d = slide_index_sum(
       x = is_above,
       i = date,
       before = days(30),
       after = days(-1)
     ),
+    count_above_in_prev_60d = slide_index_sum(
+      x = is_above,
+      i = date,
+      before = days(60),
+      after = days(-1)
+    ),
     # mortaility is raw, but population grows.
     # To account for this, alter propensity by year/5year
     year = as.factor(year(date)),
-    month = month(date),
+    month = as.factor(month(date)),
     season = case_when(
       month %in% c(12, 1, 2)  ~ "Winter",
       month %in% c(3, 4, 5)   ~ "Spring",
@@ -69,7 +81,10 @@ pm25_add <- pm25 %>%
                        T, F)
     )
 
-M <- pm25_add |> select(death, temp, pm25, is_above, count_above_in_prev_30d) |> cor()
+M <- pm25_add |> 
+  select(death, temp, pm25, is_above,count_above_in_prev_14d,
+                        count_above_in_prev_30d, count_above_in_prev_60d) |>
+  cor()
 corrplot::corrplot(M)
 
 ## Propensity Score Matching
@@ -80,6 +95,8 @@ null_match <- matchit(is_above ~ death + temp  + month + year +
                   data = pm25_add,
                   method = NULL,
                   distance = "glm")
+
+library(cobalt)
 love.plot(null_match, drop.distance = TRUE)
 # imbalance in mean for classes (esp. temp, prev, death)
 # clear for many covariates, ps matching needed 
@@ -88,15 +105,15 @@ love.plot(null_match, drop.distance = TRUE)
 
 # uneven classes - cannot 1:1 nearest neighbor match
 
-ps_match <- matchit(is_above ~ death + temp + year + month +
-                     count_above_in_prev_30d + season + is_weekend,
+ps_match <- matchit(is_above ~ death + temp + year + season +
+                     count_above_in_prev_30d  + is_weekend,
                     data = pm25_add,
                     method = 'nearest', # nearest neighbor matching
                     distance = "glm") # logistic reg
 # All treated found their match
 
 
-library(cobalt)
+
 love.plot(ps_match, drop.distance = TRUE)
 # much better! Look at temp - we know it was hightly correlated with death,
 # significantly with pm25, minorly with is_above
