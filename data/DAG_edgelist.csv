@@ -1,0 +1,20 @@
+﻿Wildfires,Ambient PM2.5 
+Construction,Ambient PM2.5 
+Exhaust,Ambient PM2.5 
+Industrial Emissions,Ambient PM2.5 
+Wildfires,Wildfire Related Mortality
+Wildfire Related Mortality,Total Number of Non-Accidental Deaths
+Ambient PM2.5 ,Individual Exposure to Ambient PM2.5
+Weather,Time Spent Outside
+Time Spent Outside,Individual Exposure to Ambient PM2.5
+Indoor Ventilation Quality,Individual Exposure to Localized (Indoor) PM2.5
+Cooking+ Combustion Activities,Individual Exposure to Localized (Indoor) PM2.5
+Individual Exposure to Ambient PM2.5,Individual Short-term Exposure to PM2.5
+Individual Exposure to Localized (Indoor) PM2.5,Individual Short-term Exposure to PM2.5
+Historical Exposure to PM2.5,Individual Chronic Exposure to PM2.5
+Individual Short-term Exposure to PM2.5,Individual Chronic Exposure to PM2.5
+Individual Chronic Exposure to PM2.5,Health Consequences
+Individual Short-term Exposure to PM2.5,Health Consequences
+Health Consequences,Total Number of Non-Accidental Deaths
+Time Spent Outside,"Exposure to Environmental Hazards (Disease, Cold, ect.)"
+"Exposure to Environmental Hazards (Disease, Cold, ect.)",Total Number of Non-Accidental Deaths
